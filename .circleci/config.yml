@@ -20,6 +20,9 @@ jobs:
           command: |
             # Create sfdx directory
             mkdir -p $CIRCLE_ARTIFACTS $CIRCLE_TEST_REPORTS
+      - run: 
+          name: Install PMD static apex scanner
+          command: sh build/PMD_installPMD.sh
       - run:
           name: "Create SFDX Folder" 
           command: |
@@ -36,9 +39,6 @@ jobs:
             # Install the cli
             ./sfdx/install
             sfdx
-      - run: 
-          name: Install PMD static apex scanner
-          command: sh build/PMD_installPMD.sh
       - run: 
           name: Scan /force-app folder with PMD
           command: sh build/PMD_scanSRCFolder.sh
