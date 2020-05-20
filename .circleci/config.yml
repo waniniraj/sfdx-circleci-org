@@ -1,18 +1,25 @@
 version: 2
 jobs: 
-  build: 
+  build:
+    shell: /bin/bash --login 
     docker:
       - image: circleci/node:8.9.4
     environment:
       # from https://developer.salesforce.com/docs/atlas.en-us.sfdx_setup.meta/sfdx_setup/sfdx_setup_install_cli_standalone.htm
       # and https://developer.salesforce.com/media/salesforce-cli/manifest.json
-
+      CIRCLE_ARTIFACTS: /tmp/circleci-artifacts
+      CIRCLE_TEST_REPORTS: /tmp/circleci-test-results
       # Variables used in build steps
       - DX_CLI_URL: https://developer.salesforce.com/media/salesforce-cli/sfdx-linux-amd64.tar.xz
       - TESTLEVEL: RunLocalTests
       - DEPLOYDIR: manifest/package.xml
     steps:
       - checkout
+      - run:
+          name: "Create Artifacts folder" 
+          command: |
+            # Create sfdx directory
+            mkdir -p $CIRCLE_ARTIFACTS $CIRCLE_TEST_REPORTS
       - run:
           name: "Create SFDX Folder" 
           command: |
@@ -29,6 +36,12 @@ jobs:
             # Install the cli
             ./sfdx/install
             sfdx
+      - run: 
+        name: Install PMD static apex scanner
+        command: sh build/PMD_installPMD.sh
+      - run: 
+        name: Scan /force-app folder with PMD
+        command: sh build/PMD_scanSRCFolder.sh
       - run:
           name: Decrypt server key
           command: |
@@ -47,3 +60,11 @@ jobs:
             sfdx force:source:deploy --wait 10 --manifest $DEPLOYDIR --targetusername UAT --testlevel $TESTLEVEL
             #Example shows how to run a check only deploy.
             #sfdx force:mdapi:deploy --checkonly --wait 10 --deploydir $DEPLOYDIR --targetusername UAT --testlevel $TESTLEVEL
+      # Save test results
+      - store_test_results:
+        path: /tmp/circleci-test-results
+      # Save artifacts
+      - store_artifacts:
+        path: /tmp/circleci-artifacts
+      - store_artifacts:
+        path: /tmp/circleci-test-results
