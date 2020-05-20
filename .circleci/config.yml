@@ -7,8 +7,8 @@ jobs:
     environment:
       # from https://developer.salesforce.com/docs/atlas.en-us.sfdx_setup.meta/sfdx_setup/sfdx_setup_install_cli_standalone.htm
       # and https://developer.salesforce.com/media/salesforce-cli/manifest.json
-      CIRCLE_ARTIFACTS: /tmp/circleci-artifacts
-      CIRCLE_TEST_REPORTS: /tmp/circleci-test-results
+      - CIRCLE_ARTIFACTS: /tmp/circleci-artifacts
+      - CIRCLE_TEST_REPORTS: /tmp/circleci-test-results
       # Variables used in build steps
       - DX_CLI_URL: https://developer.salesforce.com/media/salesforce-cli/sfdx-linux-amd64.tar.xz
       - TESTLEVEL: RunLocalTests
