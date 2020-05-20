@@ -37,11 +37,11 @@ jobs:
             ./sfdx/install
             sfdx
       - run: 
-        name: Install PMD static apex scanner
-        command: sh build/PMD_installPMD.sh
+          name: Install PMD static apex scanner
+          command: sh build/PMD_installPMD.sh
       - run: 
-        name: Scan /force-app folder with PMD
-        command: sh build/PMD_scanSRCFolder.sh
+          name: Scan /force-app folder with PMD
+          command: sh build/PMD_scanSRCFolder.sh
       - run:
           name: Decrypt server key
           command: |
